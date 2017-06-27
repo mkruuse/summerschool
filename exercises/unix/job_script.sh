@@ -5,5 +5,5 @@
 #SBATCH -n 24
 #SBATCH -ptest
 #SBATCH -t 5
-
+aprun -n 24 prog
 
