@@ -3,7 +3,7 @@ COMP=cray
 ifeq ($(COMP),cray)
 CC=cc
 FC=ftn 
-FCFLAGS=-efmw -hcpu=sandybridge
+FCFLAGS=-efmw -hcpu=sandybridge -hbounds
 endif
 
 ifeq ($(COMP),gnu)
