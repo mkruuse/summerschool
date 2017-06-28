@@ -20,7 +20,7 @@ contains
   
  subroutine finalize(array)
   implicit none
-  real, dimension(:,:),allocatable,  intent(inout):: array
+  real, dimension(:,:), allocatable,  intent(inout):: array
   deallocate(array)
  end subroutine finalize
 
