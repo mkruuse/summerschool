@@ -1,7 +1,7 @@
-COMP=cray
+COMP=gnu
 
 COMMONDIR=../../../heat/common
-LIBPNGDIR=/appl/opt/libpng
+LIBPNGDIR=/usr/lib64
 
 ifeq ($(COMP),cray)
 FC=ftn

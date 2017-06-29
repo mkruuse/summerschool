@@ -16,17 +16,26 @@ contains
     real, allocatable, dimension(:) :: temp
     real, dimension(:,:), allocatable, intent(out) :: field
     character(len=*), intent(in) :: filename
-    open(unit=11, file='filename', status="old", action="read")
-    read(11,fmt='(I10,I10)') nx, ny
-    print*,'nx, ny', nx, ny
+    integer :: iostat
+    integer, parameter :: funit=10
+    character(len=1) :: dummy
+    integer :: stat
+
+    open(funit, file=filename, status="old", action="read", iostat=stat)
+
+    read(funit, *) dummy, nx, ny
+    !print*,'nx, ny', nx, ny
+
     allocate(temp(ny)) 
     allocate(field(nx,ny))
-    read(11, fmt=*)
+
     do i=1, nx
-     read(11, fmt=*) temp(:)
+     read(funit, fmt=*) temp(:)
+     !print*, temp(1)
      field(i,:)=temp
     end do
-    close(11)
+
+    close(funit)
 
  end subroutine read_field
 
