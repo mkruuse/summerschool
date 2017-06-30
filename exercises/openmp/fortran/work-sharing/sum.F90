@@ -2,8 +2,8 @@ program vectorsum
   implicit none
   integer, parameter :: rk = kind(1d0)
   integer, parameter :: ik = selected_int_kind(9)
-  integer, parameter :: nx = 102400
-
+  integer, parameter :: nx = 102
+  integer :: num_thread
   real(kind=rk), dimension(nx) :: vecA, vecB, vecC
   real(kind=rk)    :: sum
   integer(kind=ik) :: i
@@ -16,8 +16,15 @@ program vectorsum
 
   ! TODO:
   !   Implement here the parallelized version of vector addition,
-  !   vecC = vecA + vecB
-
+  !$omp parallel shared(vecA, vecB, vecC) private(i)
+  !$omp do schedule(dynamic)
+  do i=1, nx 
+   vecC(i) = vecA(i) + vecB(i)
+   num_thread=omp_get_thread_num()
+   print*, "Thread number", num_thread
+  end do
+  !$omp end do
+  !$omp end parallel
   ! Compute the check value
   write(*,*) 'Reduction sum: ', sum(vecC)
 
