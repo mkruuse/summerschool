@@ -8,32 +8,49 @@ program basic
   integer :: status(MPI_STATUS_SIZE)
   integer :: message(size)
   integer :: receiveBuffer(size)
-
+  integer :: i, j
   real(REAL64) :: t0, t1
-
+  
   call mpi_init(rc)
   call mpi_comm_rank(MPI_COMM_WORLD, myid, rc)
   call mpi_comm_size(MPI_COMM_WORLD, ntasks, rc)
-
+  
   message = myid
 
-  ! Start measuring the time spent in communication
+! Start measuring the time spent in communication
   call mpi_barrier(mpi_comm_world, rc)
   t0 = mpi_wtime()
-
-  ! TODO: Send and receive as defined in the assignment
-  if ( myid < ntasks-1 ) then
-     call  mpi_sendrecv(message, size, mpi_integer, myid+1, 0, receiveBuffer, size, mpi_integer, myid+1, 1,  MPI_COMM_WORLD, status, rc)
-     write(*,'(A10,I3,A20,I8,A,I3,A,I3)') 'Sender: ', myid, &
-          ' Sent elements: ',size, &
-          '. Tag: ', myid+1, '. Receiver: ', myid+1, 'The status: ', status 
-  end if
-  if ( myid > 0 ) then
-     call mpi_sendrecv(message, size, mpi_integer, myid-1, 1, receiveBuffer, size, mpi_integer, myid-1,0, MPI_COMM_WORLD, status, rc)
-     write(*,'(A10,I3,A,I3)') 'Receiver: ', myid, &
-          ' First element: ', receiveBuffer(1), 'The status: ', status
-  end if
-
+! i=0
+ ! TODO: Send and receive as defined in the assignment
+ ! if(i/=0 .or. i/=ntasks) then
+   if ( myid < ntasks-1 ) then
+      call  mpi_sendrecv(message, size, mpi_integer, myid+1, 0, receiveBuffer, size, mpi_integer, myid+1, 1,  MPI_COMM_WORLD, status, rc) 
+      write(*,'(A10,I3,A20,I8,A,I3,A,I3)') 'Sender: ', myid, &
+           ' Sent elements: ',size, &
+           '. Tag: ', myid+1, '. Receiver: ', myid+1, 'The status: ', status 
+ !     print*, "The i-variable:", i
+ !     i=i+1  
+    end if
+   if ( myid > 0 ) then
+      call mpi_sendrecv(message, size, mpi_integer, myid-1, 1, receiveBuffer, size, mpi_integer, myid-1,0, MPI_COMM_WORLD, status, rc)
+      write(*,'(A10,I3,A,I3)') 'Receiver: ', myid, &
+           ' First element: ', receiveBuffer(1), 'The status: ', status
+ !     print*, "The i-variable:", i
+ !     i=i+1
+   end if
+ ! else if (i==0) then
+ !   call  mpi_sendrecv(message, size, mpi_integer, i+1, 0, receiveBuffer, size, mpi_integer, MPI_PROC_NULL, 1,  MPI_COMM_WORLD, status, rc) 
+ !   write(*,'(A10,I3,A20,I8,A,I3,A,I3)') 'Sender: ', myid, &
+ !          ' Sent elements: ',size, &
+ !          '. Tag: ', myid+1, '. Receiver: ', myid+1, 'The status: ', status
+ !   print*, "The i-variable:", i
+ !   i=i+1  
+ ! else if (i==ntasks) then
+ !   call mpi_sendrecv(message, size, mpi_integer, MPI_PROC_NULL, 1, receiveBuffer, size, mpi_integer, myid-1,0, MPI_COMM_WORLD, status, rc)
+ !   write(*,'(A10,I3,A,I3)') 'Receiver: ', myid, &
+ !          ' First element: ', receiveBuffer(1), 'The status: ', status
+ !   print*, "The i-variable:", i
+ ! end if
 
   ! Finalize measuring the time and print it out
   t1 = mpi_wtime()
