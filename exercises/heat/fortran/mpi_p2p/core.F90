@@ -13,13 +13,17 @@ contains
     type(field), intent(inout) :: field0
     type(parallel_data), intent(in) :: parallel
 
-    integer :: ierr
+    integer :: ierr, nx, ny
+    nx = field0%nx
+    ny = field0%ny
 
     ! TODO start: implement halo exchange
     ! Send to left, receive from right
-
+    call MPI_send(field0%data(:,1),nx+2,mpi_double_precision,parallel%nleft,1 , MPI_COMM_WORLD, ierr)
+    call MPI_recv(field0%data(:,ny+1), nx+2, mpi_double_precision, parallel%nright,1, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
     ! Send to right, receive from left
-
+    call MPI_send(field0%data(:,ny), nx+2, mpi_double_precision, parallel%nright, 2, MPI_COMM_WORLD, ierr)
+    call MPI_recv(field0%data(:,0), nx+2, mpi_double_precision, parallel%nleft, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
     ! TODO end
 
   end subroutine exchange
@@ -40,7 +44,7 @@ contains
 
     nx = curr%nx
     ny = curr%ny
-
+   
     do j = 1, ny
        do i = 1, nx
           curr%data(i, j) = prev%data(i, j) + a * dt * &
