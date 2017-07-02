@@ -10,9 +10,11 @@ program coll_exer
   integer, parameter :: bufsize = 2*n_mpi_tasks
   integer, dimension(0:n_mpi_tasks-1) :: sendcounts
   integer, dimension(0:n_mpi_tasks-1)  :: displacements
+  integer :: name_newcomm
   call mpi_init(ierr)
   call mpi_comm_size(MPI_COMM_WORLD, ntasks, ierr)
   call mpi_comm_rank(MPI_COMM_WORLD, rank, ierr)
+ 
 
   if (ntasks /= n_mpi_tasks) then
      if (rank == 0) then
@@ -47,6 +49,21 @@ program coll_exer
   call init_buffers
   call mpi_alltoall(sendbuf, 2, mpi_integer, recvbuf, 2, mpi_integer, MPI_COMM_WORLD, ierr)
   call print_buffers(recvbuf)
+  !6) communicators and collectives
+  call init_buffers
+  !I have to create a new variable:
+  if(rank==0 .or. rank==1) then
+    color=1
+  else
+   color=2
+  end if 
+  call mpi_comm_split(MPI_COMM_WORLD, color, rank, name_newcomm, ierr)
+  call mpi_reduce(sendbuf, recvbuf, 8, mpi_integer, mpi_sum, 0, name_newcomm, ierr)
+  call print_buffers(recvbuf)
+
+  !7) Non-blocking operants
+  
+
   call mpi_finalize(ierr)
 
 contains
