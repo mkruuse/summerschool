@@ -16,11 +16,11 @@ contains
 
     type(field), intent(inout) :: curr, prev
     real(dp) :: a, dt
-    integer :: i, j, nx, ny
+    integer :: i, j, nx, ny, k
 
     nx = curr%nx
     ny = curr%ny
-
+    
     do j = 1, ny
        do i = 1, nx
           curr%data(i, j) = prev%data(i, j) + a * dt * &
