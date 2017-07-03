@@ -49,7 +49,7 @@ program datatype2
   end if
       
   !TODO: free mpi datatype	
-
+  call mpi_type_free(subarray_type, ierr)
   call mpi_finalize(ierr)
 
 end program datatype2
