@@ -36,7 +36,7 @@ program datatype2
   call mpi_type_commit(subarray_type, ierr)
   !TODO: send a block of a matrix from rank 0 to rank 1
   if(rank==0) then
-   call mpi_send(array, 1,subarray_type, 1,100, MPI_COMM_WORLD, ierr ) 
+   call mpi_send(array, 1, subarray_type, 1, 100, MPI_COMM_WORLD, ierr ) 
   end if
   if(rank==1) then
    call mpi_recv(array, 1, subarray_type, 0, 100, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
