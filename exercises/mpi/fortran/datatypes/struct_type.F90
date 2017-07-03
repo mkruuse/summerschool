@@ -37,7 +37,7 @@ program datatype_struct
   blocklen=(/3,1,2/)
   call mpi_get_address(particles(1)%coords, disp(1), ierror)
   call mpi_get_address(particles(1)%charge, disp(2), ierror)
-  call mpi_get_adress(particles(1)%label, disp(3), ierror)
+  call mpi_get_address(particles(1)%label, disp(3), ierror)
   do i=cnt-1, i
    disp(i)=disp(i)-disp(1)
   end do 
