@@ -9,7 +9,8 @@ program datatype2
   !TODO: declare variable for block datatype
   integer, dimension(2) :: sizes, subsizes, offsets
   integer :: i, j
-  
+  integer :: subarray_type
+
   call mpi_init(ierr)
   call mpi_comm_rank(MPI_COMM_WORLD, rank ,ierr)
 
@@ -25,16 +26,22 @@ program datatype2
   end if
 
   !TODO: create a datatype for a subblock [2:5][3:5] of the 8x8 matrix
-  !sizes(1) =
-  !sizes(2) =
-  !subsizes(1) =
-  !subsizes(2) =
-  !offsets(1) = 
-  !offsets(2) = 
-
+  sizes(1) = 8
+  sizes(2) = 8
+  subsizes(1) = 4
+  subsizes(2) = 3
+  offsets(1) =  1
+  offsets(2) =  2 !rows and columns start from 0 in fortran
+  call mpi_type_create_subarray(2, sizes,subsizes,offsets, MPI_ORDER_FORTRAN,MPI_INTEGER ,subarray_type, ierr)
+  call mpi_type_commit(subarray_type, ierr)
   !TODO: send a block of a matrix from rank 0 to rank 1
-
-  ! Print out the result
+  if(rank==0) then
+   call mpi_send(array, 1,subarray_type, 1,100, MPI_COMM_WORLD, ierr ) 
+  end if
+  if(rank==1) then
+   call mpi_recv(array, 1, subarray_type, 0, 100, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+  end if 
+ ! Print out the result
   if (rank == 1) then
      do i=1,8
         write(*,'(8I3)') array(i, :)
