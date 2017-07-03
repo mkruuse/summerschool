@@ -43,7 +43,7 @@ program cart_test
   call MPI_cart_shift(comm2d, 1 ,1 , neighbors(3), neighbors(4), rc)
   ! Find out & store also the Cartesian coordinates of a rank
   ! TO DO
-  call MPI_cart_coords(comm2d, my_id,2, coord)
+  call MPI_cart_coords(comm2d, my_id,2, coord, rc)
   
   do irank = 0, ntask-1
      if (my_id == irank) print '(I3,A,2I2,A,4I3)', &
