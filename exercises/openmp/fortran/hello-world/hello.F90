@@ -1,5 +1,6 @@
 program hello
   use omp_lib
+  use mpi
   implicit none
   integer :: active_threads
   integer :: thread_num
